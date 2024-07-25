@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "search-ranking-utils"
+version = "0.1.0"
+description = "Utils for building machine learning models to rank search results"
+authors = ["Selvin Selbaraju <selvinoselbaraju@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+pandas = "^2.2.2"
+matplotlib = "^3.9.1"
+seaborn = "^0.13.2"
+scikit-learn = "^1.5.1"
+sentence-transformers = "^3.0.1"
+torch = "^2.4.0"
+tensorflow-macos = "^2.16.2"
+xgboost = "^2.1.0"
+
+
+[tool.poetry.group.dev.dependencies]
+ipykernel = "^6.29.5"
+pytest = "^8.3.2"
+pre-commit = "^3.7.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
