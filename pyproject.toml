@@ -4,6 +4,7 @@ version = "0.1.0"
 description = "Utils for building machine learning models to rank search results"
 authors = ["Selvin Selbaraju <selvinoselbaraju@gmail.com>"]
 readme = "README.md"
+packages = [{include = "search_ranking_utils"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"
