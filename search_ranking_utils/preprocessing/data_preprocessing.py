@@ -41,6 +41,7 @@ def normalise_numerical_features(
     Normalise features using pre-computed stats
     The `epsilon` param is to prevent zero division
     """
+    logger.info(f"Norm stats: {norm_stats}")
     for f, f_stats in norm_stats.items():
         f_mean = f_stats["mean"]
         f_std = epsilon if f_stats["std"] == 0 else f_stats["std"]
