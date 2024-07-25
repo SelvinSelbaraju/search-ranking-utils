@@ -2,6 +2,8 @@ from search_ranking_utils.utils.testing import assert_dicts_equal
 from search_ranking_utils.preprocessing.data_preprocessing import (
     create_imputations,
     impute_df,
+    calculate_norm_stats,
+    normalise_numerical_features,
 )
 
 
@@ -14,7 +16,7 @@ def test_create_imputations(dummy_df, dummy_schema):
         "u_n_f_2": -500.5,
         "p_n_f_1": 100.50,
     }
-    assert_dicts_equal(result, expected)
+    assert_dicts_equal(expected, result)
 
 
 # Impute data using imputations
@@ -38,3 +40,20 @@ def test_impute_df(dummy_df, dummy_schema):
         ]["p_c_f_2"].values[0]
         == "food"
     )
+
+
+def test_calculate_norm_stats(dummy_df, dummy_schema):
+    result = calculate_norm_stats(dummy_df, dummy_schema)
+    expected = {
+        "u_n_f_2": {"mean": -500.5, "std": 547.1748349476609},
+        "p_n_f_1": {"mean": 107.60928571428572, "std": 92.39643014517083},
+    }
+    assert_dicts_equal(expected, result)
+
+
+def test_normalise_numerical_features(dummy_df, dummy_schema):
+    stats = calculate_norm_stats(dummy_df, dummy_schema)
+    result = normalise_numerical_features(dummy_df, stats)
+    # Check 1 of the numerical features in different rows
+    assert result.iloc[0]["u_n_f_2"] == 0.912870929175277
+    assert result.iloc[5]["p_n_f_1"] == -1.148413261719848
