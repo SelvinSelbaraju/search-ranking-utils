@@ -4,12 +4,12 @@
             "u_c_f_1": {
                 "impute": "mode"
             },
-            "p_c_f_1": {
+            "p_c_f_2": {
                 "impute": "mode"
             }
         },
         "numerical": {
-            "u_n_f_1": {
+            "u_n_f_2": {
                 "impute": "mean"
             },
             "p_n_f_1": {
