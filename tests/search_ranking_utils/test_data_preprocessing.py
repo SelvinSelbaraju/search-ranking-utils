@@ -4,6 +4,7 @@ from search_ranking_utils.preprocessing.data_preprocessing import (
     impute_df,
     calculate_norm_stats,
     normalise_numerical_features,
+    create_one_hot_encoder,
     one_hot_encode_categorical_features,
 )
 
@@ -61,7 +62,10 @@ def test_normalise_numerical_features(dummy_df, dummy_schema):
 
 
 def test_one_hot_encode_categorical_features(dummy_df, dummy_schema):
-    result = one_hot_encode_categorical_features(dummy_df, dummy_schema)
+    encoder = create_one_hot_encoder(dummy_df, dummy_schema)
+    result = one_hot_encode_categorical_features(
+        dummy_df, dummy_schema, encoder
+    )
     # Check if each of the OHE columns exists
     # Check if got the right values for two rows of data
     assert result.iloc[0]["u_c_f_1_loyal"] == 1

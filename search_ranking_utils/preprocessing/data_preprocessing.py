@@ -63,7 +63,7 @@ def create_one_hot_encoder(df: pd.DataFrame, schema: dict) -> "OneHotEncoder":
 
 
 def one_hot_encode_categorical_features(
-    df: pd.DataFrame, schema: dict
+    df: pd.DataFrame, schema: dict, one_hot_encoder: OneHotEncoder
 ) -> pd.DataFrame:
     """
     Append one hot encoded features to the data
@@ -71,7 +71,6 @@ def one_hot_encode_categorical_features(
     """
     categorical_features = list(schema["features"]["categorical"].keys())
     categorical_data = df[categorical_features]
-    one_hot_encoder = create_one_hot_encoder(df, schema)
     # Create the OHE columns
     columns = []
     for i in range(len(categorical_features)):
