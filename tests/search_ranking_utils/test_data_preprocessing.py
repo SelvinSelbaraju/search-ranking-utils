@@ -4,6 +4,7 @@ from search_ranking_utils.preprocessing.data_preprocessing import (
     impute_df,
     calculate_norm_stats,
     normalise_numerical_features,
+    one_hot_encode_categorical_features,
 )
 
 
@@ -57,3 +58,26 @@ def test_normalise_numerical_features(dummy_df, dummy_schema):
     # Check 1 of the numerical features in different rows
     assert result.iloc[0]["u_n_f_2"] == 0.912870929175277
     assert result.iloc[5]["p_n_f_1"] == -1.148413261719848
+
+
+def test_one_hot_encode_categorical_features(dummy_df, dummy_schema):
+    result = one_hot_encode_categorical_features(dummy_df, dummy_schema)
+    # Check if each of the OHE columns exists
+    # Check if got the right values for two rows of data
+    assert result.iloc[0]["u_c_f_1_loyal"] == 1
+    assert result.iloc[3]["u_c_f_1_loyal"] == 0
+    assert result.iloc[0]["u_c_f_1_infrequent"] == 0
+    assert result.iloc[3]["u_c_f_1_infrequent"] == 1
+
+    assert result.iloc[0]["p_c_f_2_jacket"] == 1
+    assert result.iloc[3]["p_c_f_2_jacket"] == 0
+    assert result.iloc[0]["p_c_f_2_kids"] == 0
+    assert result.iloc[3]["p_c_f_2_kids"] == 0
+    assert result.iloc[0]["p_c_f_2_food"] == 0
+    assert result.iloc[3]["p_c_f_2_food"] == 1
+    assert result.iloc[0]["p_c_f_2_cooking"] == 0
+    assert result.iloc[3]["p_c_f_2_cooking"] == 0
+
+    # Check if old categorical columns are dropped
+    assert "u_c_f_1" not in result.columns
+    assert "p_c_f_2" not in result.columns

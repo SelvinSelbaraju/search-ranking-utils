@@ -1,5 +1,6 @@
-import pandas as pd
 import logging
+import pandas as pd
+from sklearn.preprocessing import OneHotEncoder
 
 logger = logging.getLogger(__name__)
 
@@ -45,3 +46,40 @@ def normalise_numerical_features(
         f_std = epsilon if f_stats["std"] == 0 else f_stats["std"]
         df[f] = (df[f] - f_mean) / (f_std)
     return df
+
+
+def create_one_hot_encoder(df: pd.DataFrame, schema: dict) -> "OneHotEncoder":
+    """
+    Create a one hot encoder object to encode categorical features
+    Needs to be used for preprocessing validation data as well
+    """
+    categorical_features = list(schema["features"]["categorical"].keys())
+    categorical_data = df[categorical_features]
+    # Don't want it to error on validation data with unknown category
+    encoder = OneHotEncoder(handle_unknown="ignore", sparse_output=False)
+    encoder.fit(categorical_data)
+    return encoder
+
+
+def one_hot_encode_categorical_features(
+    df: pd.DataFrame, schema: dict
+) -> pd.DataFrame:
+    """
+    Append one hot encoded features to the data
+    Also drop original categorical feature
+    """
+    categorical_features = list(schema["features"]["categorical"].keys())
+    categorical_data = df[categorical_features]
+    one_hot_encoder = create_one_hot_encoder(df, schema)
+    # Create the OHE columns
+    columns = []
+    for i in range(len(categorical_features)):
+        f = categorical_features[i]
+        for category in one_hot_encoder.categories_[i]:
+            columns.append(f"{f}_{category}")
+    encoded = pd.DataFrame(
+        one_hot_encoder.transform(categorical_data), columns=columns
+    )
+    # Drop original categorical features and concat on
+    df = df.drop(categorical_features, axis=1)
+    return pd.concat([df, encoded], axis=1)
