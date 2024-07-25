@@ -15,7 +15,7 @@ To contextualise these utils and to be able to write unit tests for them, a data
 1. `query_id`: The identifier for the collection of results being ranked, not for the text of the query
 2. `search_query`: The raw search query text
 3. `user_id`: Dummy string identifier for a user
-4. `timestamp`: The timestamp at which the impressions data was collected
+4. `local_timestamp`: The timestamp at which the impressions data was collected, in local time
 5. `geo_location`: Dummy location where the user is
 6. `u_n_f_1`: Dummy user numerical feature
 7. `u_n_f_2`: Dummy user numerical feature
@@ -28,3 +28,4 @@ To contextualise these utils and to be able to write unit tests for them, a data
 14. `p_n_f_2`: Dummy product numerical feature
 15. `p_c_f_1`: Dummy product categorical feature
 16. `p_c_f_2`: Dummy product categorical feature
+17. `interacted`: A dummy target variable for whether the user had a positive interaction with this product
