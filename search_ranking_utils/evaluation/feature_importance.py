@@ -23,6 +23,7 @@ def calculate_feature_importance(
     explainer = shap.Explainer(f, background)
     shap_values = explainer(X).values
     shap_df = pd.DataFrame(shap_values, columns=X.columns)
+    # Aggregate per row feature importance
     shap_df = shap_df.mean().sort_values(ascending=False)
     return shap_values, shap_df
 
