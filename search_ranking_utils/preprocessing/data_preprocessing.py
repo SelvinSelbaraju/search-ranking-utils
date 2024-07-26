@@ -86,16 +86,25 @@ def one_hot_encode_categorical_features(
     return pd.concat([df, encoded], axis=1)
 
 
+def drop_cols(df: pd.DataFrame, schema: dict) -> pd.DataFrame:
+    """
+    Drop columns not specified in the schema
+    """
+    features = [f for f in schema["features"].get("categorical", [])]
+    for f in schema["features"].get("numerical", []):
+        features.append(f)
+    features.append(schema["target"])
+    features.append(schema["query_col"])
+    return df[features]
+
+
 def split_dataset(
     df: pd.DataFrame, schema: dict
 ) -> Union[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     """
     Return the original df, X and y
+    Assumes data already preprocessed
     """
-    numerical_features = list(schema["features"].get("numerical", {}).keys())
-    categorical_features = list(
-        schema["features"].get("categorical", {}).keys()
-    )
-    X = df[(numerical_features + categorical_features)]
+    X = df.drop([schema["target"], schema["query_col"]], axis=1)
     y = df[schema["target"]]
     return df, X, y
