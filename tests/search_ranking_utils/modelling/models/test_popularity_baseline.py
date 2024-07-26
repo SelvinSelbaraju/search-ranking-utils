@@ -23,22 +23,26 @@ def test_populatiy_baseline_fit(dummy_df, dummy_schema):
         (None, 2 / 7),
     ],
 )
-def test_populatiy_baseline_call(
+def test_populatiy_baseline_predict_proba(
     dummy_df, dummy_schema, default_val, expected_default_val
 ):
     model = PopularityBaseline(
         dummy_schema["target"], "product_id", default_val=default_val
     )
     model.fit(dummy_df)
-    scores = model(dummy_df)
+    scores = model.predict_proba(dummy_df)
 
     # Check the scores
-    assert scores[0] == 1.0
-    assert scores[1] == 0.0
-    assert scores[4] == 1.0
+    assert scores[0][0] == 0.0
+    assert scores[0][1] == 1.0
+    assert scores[0][4] == 0.0
+    assert scores[1][0] == 1.0
+    assert scores[1][1] == 0.0
+    assert scores[1][4] == 1.0
 
     # Check the OOV products
     # Add on a row of data and change the product_id
     df = pd.concat([dummy_df, dummy_df.iloc[0]])
     df.iloc[-1]["product_id"] = "prod200"
-    assert model(df)[-1] == expected_default_val
+    assert model.predict_proba(df)[0][-1] == 1 - expected_default_val
+    assert model.predict_proba(df)[1][-1] == expected_default_val

@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Tuple
 import numpy as np
 import pandas as pd
 
@@ -35,6 +35,9 @@ class PopularityBaseline:
     def _get_score(self, item_id: str) -> float:
         return self.score_lookup.get(item_id, self.default_val)
 
-    def __call__(self, X: pd.DataFrame) -> np.ndarray:
+    def predict_proba(self, X: pd.DataFrame) -> Tuple[np.ndarray, np.ndarray]:
+        """
+        Return [p(target=0), p(target=1)] to match sklearn
+        """
         scores = X[self.item_id_col].apply(lambda x: self._get_score(x))
-        return scores.values
+        return 1 - scores.values, scores.values
