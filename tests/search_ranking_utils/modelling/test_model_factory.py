@@ -1,8 +1,11 @@
 import pytest
-import sklearn.ensemble
-import sklearn.linear_model
-from search_ranking_utils.modelling.models.model_factory import ModelFactory
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.linear_model import LogisticRegression
+from search_ranking_utils.modelling.model_factory import ModelFactory
 from search_ranking_utils.preprocessing.data_preprocessing import split_dataset
+from search_ranking_utils.modelling.models.popularity_baseline import (
+    PopularityBaseline,
+)
 
 
 @pytest.mark.parametrize(
@@ -11,12 +14,17 @@ from search_ranking_utils.preprocessing.data_preprocessing import split_dataset
         (
             "sklearn.linear_model:LogisticRegression",
             {"C": 0.5},
-            sklearn.linear_model.LogisticRegression,
+            LogisticRegression,
         ),
         (
             "sklearn.ensemble:RandomForestClassifier",
             {"n_estimators": 50, "min_samples_split": 10},
-            sklearn.ensemble.RandomForestClassifier,
+            RandomForestClassifier,
+        ),
+        (
+            "search_ranking_utils.modelling.models.popularity_baseline:PopularityBaseline",  # noqa: E501
+            {"target_col": "intereacted", "item_id_col": "product_id"},
+            PopularityBaseline,
         ),
     ],
 )
