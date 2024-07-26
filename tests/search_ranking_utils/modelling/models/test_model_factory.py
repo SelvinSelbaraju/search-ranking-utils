@@ -2,6 +2,7 @@ import pytest
 import sklearn.ensemble
 import sklearn.linear_model
 from search_ranking_utils.modelling.models.model_factory import ModelFactory
+from search_ranking_utils.preprocessing.data_preprocessing import split_dataset
 
 
 @pytest.mark.parametrize(
@@ -37,3 +38,12 @@ def test_model_factory_get_instance_from_config(
         assert (
             model_instance_param == param_val
         ), f"Expected {param_val}, got {model_instance_param}"
+
+
+def test_model_factory_fit(dummy_trainable_df, dummy_schema):
+    model = ModelFactory.get_instance_from_cofing(
+        "sklearn.linear_model:LogisticRegression",
+        {"C": 0.5},
+    )
+    _, X, y = split_dataset(dummy_trainable_df, dummy_schema)
+    model.fit(X, y)

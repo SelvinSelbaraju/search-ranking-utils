@@ -2,6 +2,7 @@ import os
 import pytest
 import pandas as pd
 from search_ranking_utils.utils.files import load_json
+from search_ranking_utils.preprocessing.preprocessor import Preprocessor
 
 """
 Contains reusable artifacts for tests like data and config
@@ -21,3 +22,9 @@ def dummy_df() -> pd.DataFrame:
 @pytest.fixture(scope="session")
 def dummy_schema() -> dict:
     return load_json(DUMMY_SCHEMA_PATH)
+
+
+@pytest.fixture(scope="session")
+def dummy_trainable_df(dummy_df, dummy_schema) -> pd.DataFrame:
+    preprocessor = Preprocessor(dummy_df, dummy_schema)
+    return preprocessor(dummy_df)
