@@ -1,4 +1,5 @@
 import logging
+from typing import Union
 import pandas as pd
 from sklearn.preprocessing import OneHotEncoder
 
@@ -83,3 +84,27 @@ def one_hot_encode_categorical_features(
     # Drop original categorical features and concat on
     df = df.drop(categorical_features, axis=1)
     return pd.concat([df, encoded], axis=1)
+
+
+def drop_cols(df: pd.DataFrame, schema: dict) -> pd.DataFrame:
+    """
+    Drop columns not specified in the schema
+    """
+    features = [f for f in schema["features"].get("categorical", [])]
+    for f in schema["features"].get("numerical", []):
+        features.append(f)
+    features.append(schema["target"])
+    features.append(schema["query_col"])
+    return df[features]
+
+
+def split_dataset(
+    df: pd.DataFrame, schema: dict
+) -> Union[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+    """
+    Return the original df, X and y
+    Assumes data already preprocessed
+    """
+    X = df.drop([schema["target"], schema["query_col"]], axis=1)
+    y = df[schema["target"]]
+    return df, X, y

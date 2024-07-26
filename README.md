@@ -2,12 +2,34 @@
 
 This repository contains utils for building machine learning models to rank search results. The utils are packaged using Poetry.
 
+## Setup
+
+This setup is for testing the codebase on your machine. It assumes you are using a Mac.
+
+### Dependencies
+
+- Python 3.10 (can be configured using pyenv)
+- Poetry 1.8.3
+- libomp (via Brew)
+
+### Instructions
+
+1. Clone the repo. From the root of the directory, install all Python dependencies into a Poetry virtual env:
+
+```
+poetry install
+```
+
 ## Repository Structure
+
+The main code is in the `search_ranking_utils` directory.
 
 - `eda`: Contains functions for exploring the data. Examples include checking key summary statistics (eg. missing values, data types, duplicate rows) and plotting distributions.
 - `preprocessing`: Contains classes/functions to preprocess data (eg. imputing missing values, normalising data, encoding categorical feature) and prepare it for training and validation. Also includes some feature engineering code.
 - `models`: Contains classes and functions to create models using Sklearn, XGBoost or Tensorflow.
 - `evaluation`: Contains functions to evaluate models and plot useful information
+
+All tests are in the `tests` directory.
 
 ## Dataset
 

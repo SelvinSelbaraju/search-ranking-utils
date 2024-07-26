@@ -7,20 +7,20 @@ def test_preprocessor_init(dummy_df, dummy_schema):
     preprocessor = Preprocessor(dummy_df, dummy_schema)
 
     assert_dicts_equal(
-        preprocessor.imputations,
         {
             "u_c_f_1": "infrequent",
             "p_c_f_2": "food",
             "u_n_f_2": -500.5,
             "p_n_f_1": 100.50,
         },
+        preprocessor.imputations,
     )
     assert_dicts_equal(
-        preprocessor.norm_stats,
         {
             "u_n_f_2": {"mean": -500.5, "std": 547.1748349476609},
             "p_n_f_1": {"mean": 107.60928571428572, "std": 92.39643014517083},
         },
+        preprocessor.norm_stats,
     )
 
     assert isinstance(preprocessor.one_hot_encoder, OneHotEncoder)
