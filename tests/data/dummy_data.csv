@@ -2,7 +2,7 @@ query_id,search_query,user_id,local_timestamp,geo_location,u_n_f_1,u_n_f_2,u_c_f
 query1,purple jacket,user1,2024-07-25 08:20:00,uk,1.0,-1.0,loyal,gold_member,prod1,Stylish jacket with purple logo,This jacket is a soft leather fabric with our purple logo stiched right on the back,200.145,-10.5,clothing,jacket,1
 query1,purple jacket,user1,2024-07-25 08:20:00,uk,1.0,-1.0,loyal,gold_member,prod2,Blue winter coat,Warm winter coat in a seasonal blue,100.50,15.0,clothing,jacket,0
 query1,purple jacket,user1,2024-07-25 08:20:00,uk,1.0,-1.0,loyal,gold_member,prod3,Purple jack in the box,Jack in the box toy with a purple box and clown inside!,10.25,-1.0,toys,kids,0
-query2,nutritional dog food,user2,2024-07-25 17:20:00,us,7.7,-1000.0,infrequent,no_subscription,prod100,basic pet food,Our best pet food yet at the best value. For any pet.,70.25,-11.0,pet,food,0
-query2,nutritional dog food,user2,2024-07-25 17:20:00,us,7.7,-1000.0,infrequent,no_subscription,prod101,Baxter's gourment dog food,A blend of cured meats enriched with all the vitamins your dog needs.,120.50,999.0,pet,food,1
-query2,nutritional dog food,user2,2024-07-25 17:20:00,us,7.7,-1000.0,,no_subscription,prod102,Nutritional yeast,A perfect vegan subsitute for cheese which is fortified with vitamin B12,1.50,0.0,grocery,cooking,0
-query2,nutritional dog food,user2,2024-07-25 17:20:00,us,7.7,,infrequent,no_subscription,prod103,PPF (pure pet foods) finest,Natural pet food for your dog,250.12,79.0,pet,,0
+query2,nutritional dog food,user2,2024-07-23 17:18:03,us,7.7,-1000.0,infrequent,no_subscription,prod100,basic pet food,Our best pet food yet at the best value. For any pet.,70.25,-11.0,pet,food,0
+query2,nutritional dog food,user2,2024-07-23 17:18:03,us,7.7,-1000.0,infrequent,no_subscription,prod101,Baxter's gourment dog food,A blend of cured meats enriched with all the vitamins your dog needs.,120.50,999.0,pet,food,1
+query2,nutritional dog food,user2,2024-07-23 17:18:03,us,7.7,-1000.0,,no_subscription,prod102,Nutritional yeast,A perfect vegan subsitute for cheese which is fortified with vitamin B12,1.50,0.0,grocery,cooking,0
+query2,nutritional dog food,user2,2024-07-23 17:18:03,us,7.7,,infrequent,no_subscription,prod103,PPF (pure pet foods) finest,Natural pet food for your dog,250.12,79.0,pet,,0
