@@ -31,7 +31,7 @@ from search_ranking_utils.modelling.models.popularity_baseline import (
 def test_model_factory_get_instance_from_config(
     test_package_module_cls, test_model_config, expected_cls
 ):
-    model_instance = ModelFactory.get_instance_from_cofing(
+    model_instance = ModelFactory.get_instance_from_config(
         test_package_module_cls,
         test_model_config,
     )
@@ -49,7 +49,7 @@ def test_model_factory_get_instance_from_config(
 
 
 def test_model_factory_fit(dummy_trainable_df, dummy_schema):
-    model = ModelFactory.get_instance_from_cofing(
+    model = ModelFactory.get_instance_from_config(
         "sklearn.linear_model:LogisticRegression",
         {"C": 0.5},
     )

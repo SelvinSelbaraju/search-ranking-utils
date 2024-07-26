@@ -1,17 +1,23 @@
-from typing import Tuple
+from typing import Tuple, Optional
+import logging
 import numpy as np
 import pandas as pd
 import shap
 from search_ranking_utils.preprocessing.data_preprocessing import split_dataset
 
+logger = logging.getLogger(__name__)
+
 
 def calculate_feature_importance(
-    df: pd.DataFrame, schema: dict, model
+    df: pd.DataFrame, schema: dict, model, sample_size: Optional[int] = None
 ) -> Tuple[np.ndarray, pd.DataFrame]:
     """
     Given a preprocessed dataset, calcualte feature importance
     """
     df, X, y = split_dataset(df, schema)
+    if sample_size:
+        logger.info(f"Downsampling X to {sample_size} rows")
+        X = X.sample(n=sample_size)
 
     # Use Shap kernel predict by defining inner function
     def f(X):

@@ -13,7 +13,7 @@ class ModelFactory:
         pass
 
     @classmethod
-    def get_instance_from_cofing(
+    def get_instance_from_config(
         cls, package_module_cls: str, config: dict = {}
     ):
         """

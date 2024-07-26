@@ -1,5 +1,5 @@
 import logging
-from typing import Union
+from typing import Tuple
 import pandas as pd
 from sklearn.preprocessing import OneHotEncoder
 
@@ -79,7 +79,9 @@ def one_hot_encode_categorical_features(
         for category in one_hot_encoder.categories_[i]:
             columns.append(f"{f}_{category}")
     encoded = pd.DataFrame(
-        one_hot_encoder.transform(categorical_data), columns=columns
+        one_hot_encoder.transform(categorical_data),
+        columns=columns,
+        index=df.index,
     )
     # Drop original categorical features and concat on
     df = df.drop(categorical_features, axis=1)
@@ -100,7 +102,7 @@ def drop_cols(df: pd.DataFrame, schema: dict) -> pd.DataFrame:
 
 def split_dataset(
     df: pd.DataFrame, schema: dict
-) -> Union[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     """
     Return the original df, X and y
     Assumes data already preprocessed

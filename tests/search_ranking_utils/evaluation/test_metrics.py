@@ -13,7 +13,7 @@ from search_ranking_utils.evaluation.metrics import (
 @pytest.fixture
 def predicted_df(dummy_trainable_df, dummy_schema) -> pd.DataFrame:
     _, X, y = split_dataset(dummy_trainable_df, dummy_schema)
-    model = ModelFactory.get_instance_from_cofing(
+    model = ModelFactory.get_instance_from_config(
         "sklearn.linear_model:LogisticRegression"
     )
     model.fit(X, y)
