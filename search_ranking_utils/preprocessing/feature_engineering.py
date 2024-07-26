@@ -16,6 +16,7 @@ def calculate_text_cosine_similarity(
     Then take the cosine similarity
 
     Batching the data makes this much quicker
+    Return an array of the similairty scores for each pair
     """
     text_embeddings_1 = model.encode(df[text_col_1].values)
     text_embeddings_2 = model.encode(df[text_col_2].values)
@@ -42,3 +43,26 @@ def get_timestamp_part(
         return dt.weekday()
     else:
         return getattr(dt, timestamp_part)
+
+
+def calc_timestamp_part(
+    df: pd.DataFrame,
+    timestamp_part: str,
+    timestamp_format: str = "%Y-%m-%d %H:%M:%S",
+    timestamp_col: str = "local_timestamp",
+) -> np.ndarray:
+    """
+    Calculate the desired timestamp part
+    Return results as a numpy array
+    """
+    return (
+        df[timestamp_col]
+        .apply(
+            lambda x: get_timestamp_part(
+                timestamp_str=x,
+                timestamp_part=timestamp_part,
+                timestamp_format=timestamp_format,
+            )
+        )
+        .values
+    )

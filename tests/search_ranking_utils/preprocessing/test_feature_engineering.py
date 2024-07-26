@@ -1,9 +1,11 @@
 import time
 import logging
 import pytest
+import numpy as np
 from search_ranking_utils.preprocessing.feature_engineering import (
     calculate_text_cosine_similarity,
     get_timestamp_part,
+    calc_timestamp_part,
 )
 
 logging.basicConfig(
@@ -24,7 +26,7 @@ def test_calculate_text_cosine_similarity(dummy_df):
 
 def test_calculate_text_cosine_similarity_inference_time(dummy_df):
     NUM_INFERENCES = 15000
-    THRESHOLD_SECONDS = 60
+    THRESHOLD_SECONDS = 30
     inference_df = dummy_df[["search_query", "product_id"]].sample(
         n=NUM_INFERENCES, replace=True
     )
@@ -49,3 +51,16 @@ def test_calculate_text_cosine_similarity_inference_time(dummy_df):
 def test_get_timestamp_part(timestamp_str, timestamp_part, expected):
     result = get_timestamp_part(timestamp_str, timestamp_part)
     assert result == expected
+
+
+@pytest.mark.parametrize(
+    argnames=["timestamp_part", "expected"],
+    argvalues=[
+        ("hour", np.array([8, 8, 8, 17, 17, 17, 17])),
+        ("weekday", np.array([3, 3, 3, 1, 1, 1, 1])),
+        ("second", np.array([0, 0, 0, 3, 3, 3, 3])),
+    ],
+)
+def test_calc_timestamp_part(dummy_df, timestamp_part, expected):
+    result = calc_timestamp_part(dummy_df, timestamp_part)
+    np.testing.assert_array_equal(expected, result)
