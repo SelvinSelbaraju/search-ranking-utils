@@ -12,7 +12,7 @@ from search_ranking_utils.evaluation.feature_importance import (
 @pytest.fixture
 def dummy_model(dummy_trainable_df, dummy_schema):
 
-    model = ModelFactory.get_instance_from_cofing(
+    model = ModelFactory.get_instance_from_config(
         "sklearn.linear_model:LogisticRegression"
     )
     df, X, y = split_dataset(dummy_trainable_df, dummy_schema)
