@@ -1,3 +1,4 @@
+import pandas as pd
 from search_ranking_utils.utils.testing import assert_dicts_equal
 from search_ranking_utils.preprocessing.data_preprocessing import (
     create_imputations,
@@ -6,6 +7,7 @@ from search_ranking_utils.preprocessing.data_preprocessing import (
     normalise_numerical_features,
     create_one_hot_encoder,
     one_hot_encode_categorical_features,
+    split_dataset,
 )
 
 
@@ -85,3 +87,22 @@ def test_one_hot_encode_categorical_features(dummy_df, dummy_schema):
     # Check if old categorical columns are dropped
     assert "u_c_f_1" not in result.columns
     assert "p_c_f_2" not in result.columns
+
+
+def test_split_dataset(dummy_df, dummy_schema):
+    df, X, y = split_dataset(dummy_df, dummy_schema)
+
+    # Check df is not changed
+    pd.testing.assert_frame_equal(dummy_df, df)
+
+    # Check X has the right columns
+    assert sorted(X.columns) == [
+        "p_c_f_2",
+        "p_n_f_1",
+        "u_c_f_1",
+        "u_n_f_2",
+    ]
+
+    # Check y has the right values
+    expected_y = pd.Series([1, 0, 0, 0, 1, 0, 0], name="interacted")
+    pd.testing.assert_series_equal(expected_y, y)
