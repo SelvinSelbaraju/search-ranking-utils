@@ -1,19 +1,29 @@
 from datetime import datetime
-from sentence_transformers import SentenceTransformer, util
+import numpy as np
+import pandas as pd
+from sentence_transformers import SentenceTransformer
 
 EMBEDDING_MODEL = "msmarco-MiniLM-L-6-v3"
 model = SentenceTransformer(EMBEDDING_MODEL)
 
 
-def calculate_text_cosine_similarity(text_1: str, text_2: str) -> float:
+def calculate_text_cosine_similarity(
+    df: pd.DataFrame, text_col_1: str, text_col_2: str
+) -> float:
     """
     Given two pieces of text, calculate their similarity score
     Use the sentence_transformers to embed the pieces of text
     Then take the cosine similarity
+
+    Batching the data makes this much quicker
     """
-    embedding_1 = model.encode(text_1)
-    embedding_2 = model.encode(text_2)
-    return util.cos_sim(embedding_1, embedding_2)
+    text_embeddings_1 = model.encode(df[text_col_1].values)
+    text_embeddings_2 = model.encode(df[text_col_2].values)
+    # We only care about the diagonal as that holds the right similarity scores
+    # Eg. [0][0] is first search query with first product
+    # [4][4] is fifth search query with fifth product
+    # We would not ever want i != j
+    return np.diag(model.similarity(text_embeddings_1, text_embeddings_2))
 
 
 def get_timestamp_part(

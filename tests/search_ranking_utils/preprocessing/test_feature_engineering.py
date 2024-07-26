@@ -1,20 +1,41 @@
+import time
+import logging
 import pytest
 from search_ranking_utils.preprocessing.feature_engineering import (
     calculate_text_cosine_similarity,
     get_timestamp_part,
 )
 
-
-@pytest.mark.parametrize(
-    argnames=["text_1", "text_2"],
-    argvalues=[
-        ("water bottle", "bottle of water"),
-        ("flat screen tv", "a relaxing otter"),
-    ],
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s | %(levelname)s | %(name)s | %(message)s",
 )
-def test_calculate_text_cosine_similarity(text_1, text_2):
-    score = calculate_text_cosine_similarity(text_1, text_2)
-    assert score > -1 and score < 1
+
+
+def test_calculate_text_cosine_similarity(dummy_df):
+    scores = calculate_text_cosine_similarity(
+        dummy_df, "search_query", "product_title"
+    )
+    logging.info(scores)
+    assert scores.shape == (len(dummy_df),)
+    for score in scores:
+        assert score > -1 and score < 1
+
+
+def test_calculate_text_cosine_similarity_inference_time(dummy_df):
+    NUM_INFERENCES = 15000
+    THRESHOLD_SECONDS = 60
+    inference_df = dummy_df[["search_query", "product_id"]].sample(
+        n=NUM_INFERENCES, replace=True
+    )
+    start = time.time()
+    calculate_text_cosine_similarity(
+        inference_df, "search_query", "product_id"
+    )
+    end = time.time()
+    elapsed = end - start
+    logging.info(f"Elapsed Time: {elapsed}")
+    assert elapsed <= THRESHOLD_SECONDS
 
 
 @pytest.mark.parametrize(
