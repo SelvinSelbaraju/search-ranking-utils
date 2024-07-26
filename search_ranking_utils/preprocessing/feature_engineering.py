@@ -9,7 +9,7 @@ model = SentenceTransformer(EMBEDDING_MODEL)
 
 def calculate_text_cosine_similarity(
     df: pd.DataFrame, text_col_1: str, text_col_2: str
-) -> float:
+) -> np.ndarray:
     """
     Given two pieces of text, calculate their similarity score
     Use the sentence_transformers to embed the pieces of text
