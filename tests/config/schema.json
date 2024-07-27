@@ -20,7 +20,8 @@
             },
             "p_n_f_1": {
                 "impute": {
-                    "impute_type": "median"
+                    "impute_type": "val",
+                    "val": -50.0
                 }
             }
         }

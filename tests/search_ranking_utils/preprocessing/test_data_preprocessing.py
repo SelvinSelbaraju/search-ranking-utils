@@ -15,7 +15,7 @@ def test_impute_df(dummy_df):
         "u_c_f_1": "infrequent",
         "p_c_f_2": "food",
         "u_n_f_2": -500.5,
-        "p_n_f_1": 100.50,
+        "p_n_f_1": -50.0,
     }
     imputed_df = impute_df(dummy_df, imputations)
     # Check specific rows of data and features
