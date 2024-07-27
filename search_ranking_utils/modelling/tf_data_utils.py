@@ -20,5 +20,12 @@ def create_tfds_from_dataframes(
     if batch_size:
         ds = ds.batch(batch_size)
     else:
-        ds = ds.batch(len(batch_size))
+        ds = ds.batch(len(X))
+    # Need to have 2 dimensions
+    ds = ds.map(
+        lambda x, y: (
+            {k: tf.expand_dims(v, axis=1) for k, v in x.items()},
+            tf.expand_dims(y, axis=1),
+        )
+    )
     return ds

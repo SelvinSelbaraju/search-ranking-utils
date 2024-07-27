@@ -16,5 +16,5 @@ def test_create_tfds_from_dataframes(dummy_trainable_df, dummy_schema):
     assert isinstance(test_batch[1], tf.Tensor)
     # Check data
     assert isinstance(test_batch[0]["u_n_f_2"], tf.Tensor)
-    assert test_batch[0]["u_n_f_2"].shape == (2)
-    assert test_batch[1].shape == (2)
+    assert test_batch[0]["u_n_f_2"].shape == (2, 1)
+    assert test_batch[1].shape == (2, 1)
