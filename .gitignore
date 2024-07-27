@@ -1,2 +1,5 @@
+# External files
+data/
+
 # Testing
 *.pyc
