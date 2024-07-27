@@ -5,7 +5,6 @@ from search_ranking_utils.preprocessing.preprocessor import Preprocessor
 
 def test_preprocessor_init(dummy_df, dummy_schema):
     preprocessor = Preprocessor(dummy_df, dummy_schema)
-    print(dummy_df["u_n_f_2"])
     assert_dicts_equal(
         {
             "u_c_f_1": "infrequent",
