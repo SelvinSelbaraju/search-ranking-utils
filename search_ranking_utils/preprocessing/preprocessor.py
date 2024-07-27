@@ -24,6 +24,8 @@ class Preprocessor:
             self.one_hot_encoder = create_one_hot_encoder(
                 self.base_df, self.schema
             )
+        else:
+            self.one_hot_encoder = None
 
     def __call__(
         self, df: pd.DataFrame, drop_redundant: bool = True
