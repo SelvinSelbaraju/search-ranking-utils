@@ -41,7 +41,6 @@ class WideDeepModel(tf.keras.Model):
             self.wide_layers = [
                 tf.keras.layers.Dense(
                     1,
-                    activation=self.activation,
                     kernel_initializer=self.kernel_initialiazer,
                 )
             ]
@@ -58,7 +57,6 @@ class WideDeepModel(tf.keras.Model):
             self.deep_layers.append(
                 tf.keras.layers.Dense(
                     1,
-                    activation=self.activation,
                     kernel_initializer=self.kernel_initialiazer,
                 )
             )
@@ -84,18 +82,19 @@ class WideDeepModel(tf.keras.Model):
         X: pd.DataFrame,
         y: pd.Series,
         batch_size: int,
+        epochs: int = 1,
         losses: List[tf.keras.losses.Loss] = [
             tf.keras.losses.BinaryCrossentropy()
         ],
         metrics: List[tf.keras.metrics.Metric] = [tf.keras.metrics.AUC()],
-        optimizer: tf.keras.optimizers.Optimizer = tf.keras.optimizers.Adam(),
+        optimizer: tf.keras.optimizers.Optimizer = tf.keras.optimizers.legacy.Adam(),  # noqa: E501
     ) -> None:
         """
         Sklearn like interface to train with
         """
         ds = create_tfds_from_dataframes(X, y, batch_size)
         self.compile(metrics=metrics, loss=losses, optimizer=optimizer)
-        super().fit(ds)
+        super().fit(ds, epochs=epochs)
 
     def predict_proba(self, X: pd.DataFrame) -> np.ndarray:
         """
