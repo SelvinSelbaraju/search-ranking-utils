@@ -73,16 +73,14 @@ def test_wide_deep_model_call(dummy_tfds_tuple, test_model):
     assert output.shape == (7, 1)
 
 
-def test_wide_deep_model_fit(dummy_tfds, test_model):
-    for batch in dummy_tfds.take(1):
-        dummy_input = batch
+def test_wide_deep_model_fit(dummy_trainable_df, dummy_schema, test_model):
+    df, X, y = split_dataset(dummy_trainable_df, dummy_schema)
     # See if output changes after training
-    untrained_output = test_model(dummy_input[0])
-    test_model.compile(loss=[tf.keras.losses.BinaryCrossentropy()])
-    test_model.fit(dummy_tfds)
-    trained_output = test_model(dummy_input[0])
+    untrained_output = test_model.predict_proba(X)[:, 1]
+    test_model.fit(X, y, 2)
+    trained_output = test_model.predict_proba(X)[:, 1]
     # Make sure sum of equal less than overall length
-    assert np.equal(untrained_output.numpy(), trained_output.numpy()).sum() < 7
+    assert np.equal(untrained_output, trained_output).sum() < 7
 
 
 def test_wide_deep_model_predict_proba(

@@ -2,6 +2,9 @@ from typing import Dict, List, Optional
 import pandas as pd
 import numpy as np
 import tensorflow as tf
+from search_ranking_utils.modelling.tf_data_utils import (
+    create_tfds_from_dataframes,
+)
 
 
 class WideDeepModel(tf.keras.Model):
@@ -75,6 +78,24 @@ class WideDeepModel(tf.keras.Model):
 
         logits = tf.keras.layers.Add()(logits)
         return tf.keras.activations.sigmoid(logits)
+
+    def fit(
+        self,
+        X: pd.DataFrame,
+        y: pd.Series,
+        batch_size: int,
+        losses: List[tf.keras.losses.Loss] = [
+            tf.keras.losses.BinaryCrossentropy()
+        ],
+        metrics: List[tf.keras.metrics.Metric] = [tf.keras.metrics.AUC()],
+        optimizer: tf.keras.optimizers.Optimizer = tf.keras.optimizers.Adam(),
+    ) -> None:
+        """
+        Sklearn like interface to train with
+        """
+        ds = create_tfds_from_dataframes(X, y, batch_size)
+        self.compile(metrics=metrics, loss=losses, optimizer=optimizer)
+        super().fit(ds)
 
     def predict_proba(self, X: pd.DataFrame) -> np.ndarray:
         """
