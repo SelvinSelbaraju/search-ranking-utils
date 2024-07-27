@@ -84,7 +84,6 @@ def split_dataset(
     Return the original df, X and y
     Assumes data already preprocessed
     """
-    drop_cols = [schema.target, schema.query_col]
-    X = df.drop(drop_cols, axis=1)
+    X = df[schema.get_model_features()]
     y = df[schema.target]
     return df, X, y

@@ -122,7 +122,7 @@ class Schema:
             raise NotImplementedError("Must set vocabs first")
         features = [f.name for f in self.numerical_features]
         for f in self.categorical_features:
-            for category in self.vocabs[f]:
+            for category in self.vocabs[f.name]:
                 features.append(f"{f.name}_{category}")
         return features
 
