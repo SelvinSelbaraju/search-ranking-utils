@@ -11,9 +11,7 @@ Contains reusable artifacts for tests like data and config
 
 LOCAL_DIRECTORY = os.path.dirname(__file__)
 DUMMY_CSV_PATH = os.path.join(LOCAL_DIRECTORY, "data", "dummy_data.csv")
-DUMMY_SCHEMA_PATH = os.path.join(
-    LOCAL_DIRECTORY, "config", "test_schema_2.json"
-)
+DUMMY_SCHEMA_PATH = os.path.join(LOCAL_DIRECTORY, "config", "schema.json")
 
 
 @pytest.fixture(scope="session")
@@ -23,18 +21,14 @@ def dummy_df() -> pd.DataFrame:
 
 
 @pytest.fixture(scope="session")
-def dummy_schema() -> dict:
-    return load_json(DUMMY_SCHEMA_PATH)
-
-
-@pytest.fixture(scope="session")
-def dummy_schema_obj(dummy_df, dummy_schema) -> Schema:
-    schema = Schema.create_instance_from_dict(dummy_schema)
+def dummy_schema(dummy_df) -> Schema:
+    schema_dict = load_json(DUMMY_SCHEMA_PATH)
+    schema = Schema.create_instance_from_dict(schema_dict)
     schema.set_stats(dummy_df)
     return schema
 
 
 @pytest.fixture(scope="session")
-def dummy_trainable_df(dummy_df, dummy_schema_obj) -> pd.DataFrame:
-    preprocessor = Preprocessor(dummy_df, dummy_schema_obj)
+def dummy_trainable_df(dummy_df, dummy_schema) -> pd.DataFrame:
+    preprocessor = Preprocessor(dummy_df, dummy_schema)
     return preprocessor(dummy_df)

@@ -48,8 +48,8 @@ def test_normalise_numerical_features(dummy_df):
     assert result.iloc[5]["p_n_f_1"] == -1.148413261719848
 
 
-def test_one_hot_encode_categorical_features(dummy_df, dummy_schema_obj):
-    encoder = create_one_hot_encoder(dummy_df, dummy_schema_obj)
+def test_one_hot_encode_categorical_features(dummy_df, dummy_schema):
+    encoder = create_one_hot_encoder(dummy_df, dummy_schema)
     result = one_hot_encode_categorical_features(dummy_df, encoder)
     # Check if each of the OHE columns exists
     # Check if got the right values for two rows of data
@@ -72,17 +72,17 @@ def test_one_hot_encode_categorical_features(dummy_df, dummy_schema_obj):
     assert "p_c_f_2" not in result.columns
 
 
-def test_drop_cols(dummy_df, dummy_schema_obj):
+def test_drop_cols(dummy_df, dummy_schema):
     expected = dummy_df[
         ["u_c_f_1", "p_c_f_2", "u_n_f_2", "p_n_f_1", "interacted", "query_id"]
     ]
-    result = drop_cols(dummy_df, dummy_schema_obj)
+    result = drop_cols(dummy_df, dummy_schema)
     pd.testing.assert_frame_equal(expected, result)
 
 
-def test_split_dataset(dummy_df, dummy_schema_obj):
-    drop_df = drop_cols(dummy_df, dummy_schema_obj)
-    df, X, y = split_dataset(drop_df, dummy_schema_obj)
+def test_split_dataset(dummy_df, dummy_schema):
+    drop_df = drop_cols(dummy_df, dummy_schema)
+    df, X, y = split_dataset(drop_df, dummy_schema)
 
     # Check df is not changed
     pd.testing.assert_frame_equal(drop_df, df)

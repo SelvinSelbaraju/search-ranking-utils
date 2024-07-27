@@ -3,13 +3,14 @@ import logging
 import numpy as np
 import pandas as pd
 import shap
+from search_ranking_utils.utils.schema import Schema
 from search_ranking_utils.preprocessing.data_preprocessing import split_dataset
 
 logger = logging.getLogger(__name__)
 
 
 def calculate_feature_importance(
-    df: pd.DataFrame, schema: dict, model, sample_size: Optional[int] = None
+    df: pd.DataFrame, schema: Schema, model, sample_size: Optional[int] = None
 ) -> Tuple[np.ndarray, pd.DataFrame]:
     """
     Given a preprocessed dataset, calcualte feature importance

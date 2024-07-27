@@ -7,7 +7,7 @@ from search_ranking_utils.modelling.models.popularity_baseline import (
 
 def test_populatiy_baseline_fit(dummy_df, dummy_schema):
     model = PopularityBaseline(
-        dummy_schema["target"],
+        dummy_schema.target,
         "product_id",
     )
     model.fit(dummy_df)
@@ -27,7 +27,7 @@ def test_populatiy_baseline_predict_proba(
     dummy_df, dummy_schema, default_val, expected_default_val
 ):
     model = PopularityBaseline(
-        dummy_schema["target"], "product_id", default_val=default_val
+        dummy_schema.target, "product_id", default_val=default_val
     )
     model.fit(dummy_df)
     scores = model.predict_proba(dummy_df)

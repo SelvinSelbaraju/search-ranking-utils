@@ -3,8 +3,8 @@ from search_ranking_utils.utils.testing import assert_dicts_equal
 from search_ranking_utils.preprocessing.preprocessor import Preprocessor
 
 
-def test_preprocessor_init(dummy_df, dummy_schema_obj):
-    preprocessor = Preprocessor(dummy_df, dummy_schema_obj)
+def test_preprocessor_init(dummy_df, dummy_schema):
+    preprocessor = Preprocessor(dummy_df, dummy_schema)
     print(dummy_df["u_n_f_2"])
     assert_dicts_equal(
         {
@@ -26,8 +26,8 @@ def test_preprocessor_init(dummy_df, dummy_schema_obj):
     assert isinstance(preprocessor.one_hot_encoder, OneHotEncoder)
 
 
-def test_preprocessor_call(dummy_df, dummy_schema_obj):
-    preprocessor = Preprocessor(dummy_df, dummy_schema_obj)
+def test_preprocessor_call(dummy_df, dummy_schema):
+    preprocessor = Preprocessor(dummy_df, dummy_schema)
     result = preprocessor(dummy_df)
     # Check if each of the OHE columns exists
     # Check if got the right values for two rows of data
