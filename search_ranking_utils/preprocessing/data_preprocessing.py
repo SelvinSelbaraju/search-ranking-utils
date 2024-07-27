@@ -2,37 +2,14 @@ import logging
 from typing import Tuple
 import pandas as pd
 from sklearn.preprocessing import OneHotEncoder
+from search_ranking_utils.utils.schema import Schema
 
 logger = logging.getLogger(__name__)
-
-
-def create_imputations(df: pd.DataFrame, schema: dict) -> dict:
-    """
-    Create a dictionary of feature to imputation value
-    """
-    imputations = {}
-    for f, f_config in schema["features"]["categorical"].items():
-        # Mode doesn't return a single value
-        imputations[f] = df[f].aggregate(f_config["impute"]).values[0]
-    for f, f_config in schema["features"]["numerical"].items():
-        imputations[f] = df[f].aggregate(f_config["impute"])
-    return imputations
 
 
 def impute_df(df: pd.DataFrame, imputations: dict) -> pd.DataFrame:
     logger.info(f"Imputations: {imputations}")
     return df.fillna(imputations)
-
-
-def calculate_norm_stats(df: pd.DataFrame, schema: dict) -> dict:
-    """
-    Calculate the mean and std for each feature
-    This is so we can normalise the data
-    """
-    stats = {}
-    for f in schema["features"]["numerical"]:
-        stats[f] = {"mean": df[f].mean(), "std": df[f].std()}
-    return stats
 
 
 def normalise_numerical_features(
@@ -42,6 +19,7 @@ def normalise_numerical_features(
     Normalise features using pre-computed stats
     The `epsilon` param is to prevent zero division
     """
+    df = df.copy()
     logger.info(f"Norm stats: {norm_stats}")
     for f, f_stats in norm_stats.items():
         f_mean = f_stats["mean"]
@@ -50,27 +28,28 @@ def normalise_numerical_features(
     return df
 
 
-def create_one_hot_encoder(df: pd.DataFrame, schema: dict) -> "OneHotEncoder":
+def create_one_hot_encoder(
+    df: pd.DataFrame, schema: Schema
+) -> "OneHotEncoder":
     """
     Create a one hot encoder object to encode categorical features
     Needs to be used for preprocessing validation data as well
     """
-    categorical_features = list(schema["features"]["categorical"].keys())
-    categorical_data = df[categorical_features]
+    categorical_feature_names = [f.name for f in schema.categorical_features]
     # Don't want it to error on validation data with unknown category
     encoder = OneHotEncoder(handle_unknown="ignore", sparse_output=False)
-    encoder.fit(categorical_data)
+    encoder.fit(df[categorical_feature_names])
     return encoder
 
 
 def one_hot_encode_categorical_features(
-    df: pd.DataFrame, schema: dict, one_hot_encoder: OneHotEncoder
+    df: pd.DataFrame, one_hot_encoder: OneHotEncoder
 ) -> pd.DataFrame:
     """
     Append one hot encoded features to the data
     Also drop original categorical feature
     """
-    categorical_features = list(schema["features"]["categorical"].keys())
+    categorical_features = one_hot_encoder.feature_names_in_
     categorical_data = df[categorical_features]
     # Create the OHE columns
     columns = []
@@ -88,25 +67,24 @@ def one_hot_encode_categorical_features(
     return pd.concat([df, encoded], axis=1)
 
 
-def drop_cols(df: pd.DataFrame, schema: dict) -> pd.DataFrame:
+def drop_cols(df: pd.DataFrame, schema: Schema) -> pd.DataFrame:
     """
     Drop columns not specified in the schema
     """
-    features = [f for f in schema["features"].get("categorical", [])]
-    for f in schema["features"].get("numerical", []):
-        features.append(f)
-    features.append(schema["target"])
-    features.append(schema["query_col"])
+    features = [f.name for f in schema.all_features]
+    features.append(schema.target)
+    features.append(schema.query_col)
     return df[features]
 
 
 def split_dataset(
-    df: pd.DataFrame, schema: dict
+    df: pd.DataFrame, schema: Schema
 ) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     """
     Return the original df, X and y
     Assumes data already preprocessed
     """
-    X = df.drop([schema["target"], schema["query_col"]], axis=1)
-    y = df[schema["target"]]
+    drop_cols = [schema.target, schema.query_col]
+    X = df.drop(drop_cols, axis=1)
+    y = df[schema.target]
     return df, X, y

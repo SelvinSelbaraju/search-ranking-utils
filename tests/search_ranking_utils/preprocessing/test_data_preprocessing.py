@@ -1,9 +1,6 @@
 import pandas as pd
-from search_ranking_utils.utils.testing import assert_dicts_equal
 from search_ranking_utils.preprocessing.data_preprocessing import (
-    create_imputations,
     impute_df,
-    calculate_norm_stats,
     normalise_numerical_features,
     create_one_hot_encoder,
     one_hot_encode_categorical_features,
@@ -12,21 +9,14 @@ from search_ranking_utils.preprocessing.data_preprocessing import (
 )
 
 
-# Create imputations
-def test_create_imputations(dummy_df, dummy_schema):
-    result = create_imputations(dummy_df, dummy_schema)
-    expected = {
+# Impute data using imputations
+def test_impute_df(dummy_df):
+    imputations = {
         "u_c_f_1": "infrequent",
         "p_c_f_2": "food",
         "u_n_f_2": -500.5,
-        "p_n_f_1": 100.50,
+        "p_n_f_1": -50.0,
     }
-    assert_dicts_equal(expected, result)
-
-
-# Impute data using imputations
-def test_impute_df(dummy_df, dummy_schema):
-    imputations = create_imputations(dummy_df, dummy_schema)
     imputed_df = impute_df(dummy_df, imputations)
     # Check specific rows of data and features
     # query_id,product_id is unique in dummy data
@@ -47,17 +37,11 @@ def test_impute_df(dummy_df, dummy_schema):
     )
 
 
-def test_calculate_norm_stats(dummy_df, dummy_schema):
-    result = calculate_norm_stats(dummy_df, dummy_schema)
-    expected = {
+def test_normalise_numerical_features(dummy_df):
+    stats = {
         "u_n_f_2": {"mean": -500.5, "std": 547.1748349476609},
         "p_n_f_1": {"mean": 107.60928571428572, "std": 92.39643014517083},
     }
-    assert_dicts_equal(expected, result)
-
-
-def test_normalise_numerical_features(dummy_df, dummy_schema):
-    stats = calculate_norm_stats(dummy_df, dummy_schema)
     result = normalise_numerical_features(dummy_df, stats)
     # Check 1 of the numerical features in different rows
     assert result.iloc[0]["u_n_f_2"] == 0.912870929175277
@@ -66,9 +50,7 @@ def test_normalise_numerical_features(dummy_df, dummy_schema):
 
 def test_one_hot_encode_categorical_features(dummy_df, dummy_schema):
     encoder = create_one_hot_encoder(dummy_df, dummy_schema)
-    result = one_hot_encode_categorical_features(
-        dummy_df, dummy_schema, encoder
-    )
+    result = one_hot_encode_categorical_features(dummy_df, encoder)
     # Check if each of the OHE columns exists
     # Check if got the right values for two rows of data
     assert result.iloc[0]["u_c_f_1_loyal"] == 1

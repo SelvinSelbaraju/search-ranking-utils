@@ -2,6 +2,7 @@ import os
 import pytest
 import pandas as pd
 from search_ranking_utils.utils.files import load_json
+from search_ranking_utils.utils.schema import Schema
 from search_ranking_utils.preprocessing.preprocessor import Preprocessor
 
 """
@@ -20,8 +21,11 @@ def dummy_df() -> pd.DataFrame:
 
 
 @pytest.fixture(scope="session")
-def dummy_schema() -> dict:
-    return load_json(DUMMY_SCHEMA_PATH)
+def dummy_schema(dummy_df) -> Schema:
+    schema_dict = load_json(DUMMY_SCHEMA_PATH)
+    schema = Schema.create_instance_from_dict(schema_dict)
+    schema.set_stats(dummy_df)
+    return schema
 
 
 @pytest.fixture(scope="session")
