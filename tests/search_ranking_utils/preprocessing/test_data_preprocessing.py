@@ -80,18 +80,21 @@ def test_drop_cols(dummy_df, dummy_schema):
     pd.testing.assert_frame_equal(expected, result)
 
 
-def test_split_dataset(dummy_df, dummy_schema):
-    drop_df = drop_cols(dummy_df, dummy_schema)
-    df, X, y = split_dataset(drop_df, dummy_schema)
+def test_split_dataset(dummy_trainable_df, dummy_schema):
+    df, X, y = split_dataset(dummy_trainable_df, dummy_schema)
 
     # Check df is not changed
-    pd.testing.assert_frame_equal(drop_df, df)
+    pd.testing.assert_frame_equal(dummy_trainable_df, df)
 
     # Check X has the right columns
     assert sorted(X.columns) == [
-        "p_c_f_2",
+        "p_c_f_2_cooking",
+        "p_c_f_2_food",
+        "p_c_f_2_jacket",
+        "p_c_f_2_kids",
         "p_n_f_1",
-        "u_c_f_1",
+        "u_c_f_1_infrequent",
+        "u_c_f_1_loyal",
         "u_n_f_2",
     ]
 
