@@ -23,7 +23,7 @@ from search_ranking_utils.modelling.models.popularity_baseline import (
         ),
         (
             "search_ranking_utils.modelling.models.popularity_baseline:PopularityBaseline",  # noqa: E501
-            {"target_col": "intereacted", "item_id_col": "product_id"},
+            {"target_col": "interacted", "item_id_col": "product_id"},
             PopularityBaseline,
         ),
     ],
