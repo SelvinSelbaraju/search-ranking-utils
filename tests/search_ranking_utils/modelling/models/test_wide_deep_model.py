@@ -83,3 +83,11 @@ def test_wide_deep_model_fit(dummy_tfds, test_model):
     trained_output = test_model(dummy_input[0])
     # Make sure sum of equal less than overall length
     assert np.equal(untrained_output.numpy(), trained_output.numpy()).sum() < 7
+
+
+def test_wide_deep_model_predict_proba(
+    dummy_trainable_df, dummy_schema, test_model
+):
+    df, X, y = split_dataset(dummy_trainable_df, dummy_schema)
+    output = test_model.predict_proba(X)
+    assert output[:, 1].shape == (7,)

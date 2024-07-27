@@ -1,4 +1,6 @@
 from typing import Dict, List, Optional
+import pandas as pd
+import numpy as np
 import tensorflow as tf
 
 
@@ -73,3 +75,15 @@ class WideDeepModel(tf.keras.Model):
 
         logits = tf.keras.layers.Add()(logits)
         return tf.keras.activations.sigmoid(logits)
+
+    def predict_proba(self, X: pd.DataFrame) -> np.ndarray:
+        """
+        Run inference using a Dataframe
+        Used to match sklearn interface
+        """
+        tf_X = {
+            feature: tf.constant(data, shape=(len(X), 1))
+            for feature, data in X.to_dict(orient="list").items()
+        }
+        scores = self.call(tf_X).numpy()
+        return np.concatenate([1 - scores, scores], axis=1)
