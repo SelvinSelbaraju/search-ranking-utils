@@ -107,6 +107,11 @@ class Schema:
             )
         self.vocabs = vocabs
 
+    def set_stats(self, df: pd.DataFrame) -> None:
+        self.set_imputations(df)
+        self.set_norm_stats(df)
+        self.set_vocabs(df)
+
     def get_model_features(self) -> List[str]:
         """
         In modelling, categorical cols get dropped

@@ -3,9 +3,9 @@ from search_ranking_utils.utils.testing import assert_dicts_equal
 from search_ranking_utils.preprocessing.preprocessor import Preprocessor
 
 
-def test_preprocessor_init(dummy_df, dummy_schema):
-    preprocessor = Preprocessor(dummy_df, dummy_schema)
-
+def test_preprocessor_init(dummy_df, dummy_schema_obj):
+    preprocessor = Preprocessor(dummy_df, dummy_schema_obj)
+    print(dummy_df["u_n_f_2"])
     assert_dicts_equal(
         {
             "u_c_f_1": "infrequent",
@@ -13,21 +13,21 @@ def test_preprocessor_init(dummy_df, dummy_schema):
             "u_n_f_2": -500.5,
             "p_n_f_1": 100.50,
         },
-        preprocessor.imputations,
+        preprocessor.schema.imputations,
     )
     assert_dicts_equal(
         {
             "u_n_f_2": {"mean": -500.5, "std": 547.1748349476609},
             "p_n_f_1": {"mean": 107.60928571428572, "std": 92.39643014517083},
         },
-        preprocessor.norm_stats,
+        preprocessor.schema.norm_stats,
     )
 
     assert isinstance(preprocessor.one_hot_encoder, OneHotEncoder)
 
 
-def test_preprocessor_call(dummy_df, dummy_schema):
-    preprocessor = Preprocessor(dummy_df, dummy_schema)
+def test_preprocessor_call(dummy_df, dummy_schema_obj):
+    preprocessor = Preprocessor(dummy_df, dummy_schema_obj)
     result = preprocessor(dummy_df)
     # Check if each of the OHE columns exists
     # Check if got the right values for two rows of data

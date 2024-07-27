@@ -1,0 +1,30 @@
+{
+    "features": {
+        "categorical": {
+            "u_c_f_1": {
+                "impute": {
+                    "impute_type": "mode"
+                }
+            },
+            "p_c_f_2": {
+                "impute": {
+                    "impute_type": "mode"
+                }
+            }
+        },
+        "numerical": {
+            "u_n_f_2": {
+                "impute": {
+                    "impute_type": "mean"
+                }
+            },
+            "p_n_f_1": {
+                "impute": {
+                    "impute_type": "median"
+                }
+            }
+        }
+    },
+    "target": "interacted",
+    "query_col": "query_id"
+}
