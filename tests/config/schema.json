@@ -9,7 +9,8 @@
             "p_c_f_2": {
                 "impute": {
                     "impute_type": "mode"
-                }
+                },
+                "max_categories": 2
             }
         },
         "numerical": {

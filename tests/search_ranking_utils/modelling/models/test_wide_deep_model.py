@@ -43,10 +43,9 @@ def test_wide_deep_model_init(test_model):
     assert test_model.wide_feature_names == [
         "u_c_f_1_infrequent",
         "u_c_f_1_loyal",
-        "p_c_f_2_cooking",
+        "p_c_f_2_<OTHER>",
         "p_c_f_2_food",
         "p_c_f_2_jacket",
-        "p_c_f_2_kids",
     ]
     assert test_model.hidden_units == [4, 2, 2]
     assert test_model.activation == "relu"
