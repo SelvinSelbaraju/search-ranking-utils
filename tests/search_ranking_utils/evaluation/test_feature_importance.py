@@ -41,4 +41,4 @@ def test_calculate_feature_importance(
     assert isinstance(shap_values, np.ndarray)
     # Check that shap_df has the right shape
     assert isinstance(shap_df, pd.Series)
-    assert shap_df.shape == (8,)
+    assert shap_df.shape == (7,)
