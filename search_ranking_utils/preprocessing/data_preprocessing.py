@@ -33,13 +33,13 @@ def map_oov_categories(df: pd.DataFrame, schema: Schema) -> pd.DataFrame:
     Map categories which aren't in the vocab to OOV
     This helps reduce the number of features
     """
-    df = df.copy()
+    copied_df = df.copy()
     for f in schema.categorical_features:
         vocab_set = set(schema.vocabs[f.name])
-        df[f.name] = df[f.name].apply(
+        copied_df[f.name] = copied_df[f.name].apply(
             lambda x: x if x in vocab_set else CategoricalFeature.DEFAULT_VAL
         )
-    return df
+    return copied_df
 
 
 def create_one_hot_encoder(

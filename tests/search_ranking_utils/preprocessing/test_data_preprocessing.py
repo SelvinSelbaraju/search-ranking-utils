@@ -2,6 +2,7 @@ import pandas as pd
 from search_ranking_utils.preprocessing.data_preprocessing import (
     impute_df,
     normalise_numerical_features,
+    map_oov_categories,
     create_one_hot_encoder,
     one_hot_encode_categorical_features,
     drop_cols,
@@ -49,8 +50,9 @@ def test_normalise_numerical_features(dummy_df):
 
 
 def test_one_hot_encode_categorical_features(dummy_df, dummy_schema):
-    encoder = create_one_hot_encoder(dummy_df, dummy_schema)
-    result = one_hot_encode_categorical_features(dummy_df, encoder)
+    df = map_oov_categories(dummy_df, dummy_schema)
+    encoder = create_one_hot_encoder(df, dummy_schema)
+    result = one_hot_encode_categorical_features(df, encoder)
     # Check if each of the OHE columns exists
     # Check if got the right values for two rows of data
     assert result.iloc[0]["u_c_f_1_loyal"] == 1
@@ -60,12 +62,10 @@ def test_one_hot_encode_categorical_features(dummy_df, dummy_schema):
 
     assert result.iloc[0]["p_c_f_2_jacket"] == 1
     assert result.iloc[3]["p_c_f_2_jacket"] == 0
-    assert result.iloc[0]["p_c_f_2_kids"] == 0
-    assert result.iloc[3]["p_c_f_2_kids"] == 0
+    assert result.iloc[0]["p_c_f_2_<OTHER>"] == 0
+    assert result.iloc[3]["p_c_f_2_<OTHER>"] == 0
     assert result.iloc[0]["p_c_f_2_food"] == 0
     assert result.iloc[3]["p_c_f_2_food"] == 1
-    assert result.iloc[0]["p_c_f_2_cooking"] == 0
-    assert result.iloc[3]["p_c_f_2_cooking"] == 0
 
     # Check if old categorical columns are dropped
     assert "u_c_f_1" not in result.columns
@@ -88,10 +88,9 @@ def test_split_dataset(dummy_trainable_df, dummy_schema):
 
     # Check X has the right columns
     assert sorted(X.columns) == [
-        "p_c_f_2_cooking",
+        "p_c_f_2_<OTHER>",
         "p_c_f_2_food",
         "p_c_f_2_jacket",
-        "p_c_f_2_kids",
         "p_n_f_1",
         "u_c_f_1_infrequent",
         "u_c_f_1_loyal",

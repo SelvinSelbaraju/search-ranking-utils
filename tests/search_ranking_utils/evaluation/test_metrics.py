@@ -25,7 +25,7 @@ def test_get_pointwise_metrics(predicted_df, dummy_schema):
     metrics = get_pointwise_metrics(
         predicted_df, dummy_schema, "prediction", ["roc_auc_score", "log_loss"]
     )
-    expected_metrics = {"roc_auc_score": 0.8, "log_loss": 0.5122374154189449}
+    expected_metrics = {"roc_auc_score": 0.8, "log_loss": 0.5082727117847304}
     assert_dicts_equal(expected_metrics, metrics)
 
 

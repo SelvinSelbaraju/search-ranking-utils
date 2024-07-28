@@ -37,12 +37,10 @@ def test_preprocessor_call(dummy_df, dummy_schema):
 
     assert result.iloc[0]["p_c_f_2_jacket"] == 1
     assert result.iloc[3]["p_c_f_2_jacket"] == 0
-    assert result.iloc[0]["p_c_f_2_kids"] == 0
-    assert result.iloc[3]["p_c_f_2_kids"] == 0
+    assert result.iloc[0]["p_c_f_2_<OTHER>"] == 0
+    assert result.iloc[3]["p_c_f_2_<OTHER>"] == 0
     assert result.iloc[0]["p_c_f_2_food"] == 0
     assert result.iloc[3]["p_c_f_2_food"] == 1
-    assert result.iloc[0]["p_c_f_2_cooking"] == 0
-    assert result.iloc[3]["p_c_f_2_cooking"] == 0
 
     # Check if old categorical columns are dropped
     assert "u_c_f_1" not in result.columns

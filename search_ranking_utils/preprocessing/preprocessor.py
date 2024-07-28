@@ -3,6 +3,7 @@ from search_ranking_utils.utils.schema import Schema
 from search_ranking_utils.preprocessing.data_preprocessing import (
     impute_df,
     normalise_numerical_features,
+    map_oov_categories,
     create_one_hot_encoder,
     drop_cols,
     one_hot_encode_categorical_features,
@@ -21,6 +22,7 @@ class Preprocessor:
 
         # Optional Preprocessing objs
         if len(self.schema.categorical_features) > 0:
+            self.base_df = map_oov_categories(self.base_df, self.schema)
             self.one_hot_encoder = create_one_hot_encoder(
                 self.base_df, self.schema
             )
@@ -36,5 +38,6 @@ class Preprocessor:
         if len(self.schema.numerical_features) > 0:
             df = normalise_numerical_features(df, self.schema.norm_stats)
         if self.one_hot_encoder:
+            df = map_oov_categories(df, self.schema)
             df = one_hot_encode_categorical_features(df, self.one_hot_encoder)
         return df
