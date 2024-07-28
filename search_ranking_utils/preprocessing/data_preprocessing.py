@@ -2,7 +2,7 @@ import logging
 from typing import Tuple
 import pandas as pd
 from sklearn.preprocessing import OneHotEncoder
-from search_ranking_utils.utils.schema import Schema
+from search_ranking_utils.utils.schema import Schema, CategoricalFeature
 
 logger = logging.getLogger(__name__)
 
@@ -25,6 +25,20 @@ def normalise_numerical_features(
         f_mean = f_stats["mean"]
         f_std = epsilon if f_stats["std"] == 0 else f_stats["std"]
         df[f] = (df[f] - f_mean) / (f_std)
+    return df
+
+
+def map_oov_categories(df: pd.DataFrame, schema: Schema) -> pd.DataFrame:
+    """
+    Map categories which aren't in the vocab to OOV
+    This helps reduce the number of features
+    """
+    df = df.copy()
+    for f in schema.categorical_features:
+        vocab_set = set(schema.vocabs[f.name])
+        df[f.name] = df[f.name].apply(
+            lambda x: x if x in vocab_set else CategoricalFeature.DEFAULT_VAL
+        )
     return df
 
 

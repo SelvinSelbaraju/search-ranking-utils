@@ -38,15 +38,33 @@ class Feature:
 
 class CategoricalFeature(Feature):
     VALID_IMPUTE_TYPES = ["mode", "val"]
+    DEFAULT_VAL = "<OTHER>"
 
-    def __init__(self, name: str, impute_strategy: ImputeStrategy):
+    def __init__(
+        self,
+        name: str,
+        impute_strategy: ImputeStrategy,
+        max_categories: Optional[int] = None,
+    ):
+        """
+        Optionally limit the number of categories used for this feature
+        """
         super().__init__(name, impute_strategy)
+        self.max_categories = max_categories
         if self.impute_strategy.impute_type not in self.VALID_IMPUTE_TYPES:
             raise ValueError(
                 f"Categorical feature must have impute type "
                 f"in {self.VALID_IMPUTE_TYPES}, "
                 f"got {self.impute_strategy.impute_type}"
             )
+
+    @classmethod
+    def get_instance_from_config(cls, f_name, f_config: dict):
+        return cls(
+            name=f_name,
+            impute_strategy=ImputeStrategy(**f_config["impute"]),
+            max_categories=f_config.get("max_categories"),
+        )
 
 
 class Schema:
@@ -98,13 +116,19 @@ class Schema:
     def set_vocabs(self, df: pd.DataFrame) -> None:
         """
         Creates a dictionary of categorical vocabs
+        Limit the vocab size if provided
         """
         vocabs = {}
         for f in self.categorical_features:
             # Don't want to include nan as a category
-            vocabs[f.name] = list(
-                df.sort_values(by=f.name)[f.name].dropna().unique()
-            )
+            categories = df[f.name].dropna().value_counts()
+            # Keep the most common categories only
+            if f.max_categories:
+                categories = list(categories.head(f.max_categories).index)
+                categories.append(CategoricalFeature.DEFAULT_VAL)
+            else:
+                categories = list(categories.index)
+            vocabs[f.name] = sorted(categories)
         self.vocabs = vocabs
 
     def set_stats(self, df: pd.DataFrame) -> None:

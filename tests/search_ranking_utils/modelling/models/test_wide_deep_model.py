@@ -40,6 +40,7 @@ def dummy_tfds_tuple(dummy_tfds) -> Tuple[Dict[str, tf.Tensor], tf.Tensor]:
 
 def test_wide_deep_model_init(test_model):
     assert test_model.deep_feature_names == ["u_n_f_2", "p_n_f_1"]
+    print(test_model.wide_feature_names)
     assert test_model.wide_feature_names == [
         "u_c_f_1_infrequent",
         "u_c_f_1_loyal",
