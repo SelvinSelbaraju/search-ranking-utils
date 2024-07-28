@@ -35,10 +35,13 @@ def map_oov_categories(df: pd.DataFrame, schema: Schema) -> pd.DataFrame:
     """
     copied_df = df.copy()
     for f in schema.categorical_features:
-        vocab_set = set(schema.vocabs[f.name])
-        copied_df[f.name] = copied_df[f.name].apply(
-            lambda x: x if x in vocab_set else CategoricalFeature.DEFAULT_VAL
-        )
+        if f.max_categories:
+            vocab_set = set(schema.vocabs[f.name])
+            copied_df[f.name] = copied_df[f.name].apply(
+                lambda x: (
+                    x if x in vocab_set else CategoricalFeature.DEFAULT_VAL
+                )
+            )
     return copied_df
 
 

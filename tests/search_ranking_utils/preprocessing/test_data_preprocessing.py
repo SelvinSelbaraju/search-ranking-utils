@@ -49,6 +49,16 @@ def test_normalise_numerical_features(dummy_df):
     assert result.iloc[5]["p_n_f_1"] == -1.148413261719848
 
 
+def test_map_oov_categories(dummy_df, dummy_schema):
+    # Impute first don't need to deal with nulls
+    df = impute_df(dummy_df, dummy_schema.imputations)
+    df = map_oov_categories(df, dummy_schema)
+    # Check that the oov categories are no longer present
+    assert sorted(df["p_c_f_2"].unique()) == ["<OTHER>", "food", "jacket"]
+    # Check other columns are unaltered
+    assert sorted(df["u_c_f_1"].unique()) == ["infrequent", "loyal"]
+
+
 def test_one_hot_encode_categorical_features(dummy_df, dummy_schema):
     df = map_oov_categories(dummy_df, dummy_schema)
     encoder = create_one_hot_encoder(df, dummy_schema)
