@@ -39,6 +39,10 @@ def test_set_vocabs(dummy_df, dummy_schema):
     dummy_schema.set_vocabs(dummy_df)
     expected = {
         "u_c_f_1": ["infrequent", "loyal"],
-        "p_c_f_2": ["<OTHER>", "food", "jacket"],
+        "p_c_f_2": [
+            "food",
+            "jacket",
+            "~OTHER~",
+        ],
     }
     assert_dicts_equal(expected, dummy_schema.vocabs)
