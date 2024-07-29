@@ -89,7 +89,7 @@ class Schema:
         """
         imputations = {}
         for f in self.all_features:
-            if f.impute_strategy.val:
+            if f.impute_strategy.val is not None:
                 imputations[f.name] = f.impute_strategy.val
             else:
                 impute_val = df[f.name].aggregate(
