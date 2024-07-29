@@ -54,7 +54,7 @@ def test_map_oov_categories(dummy_df, dummy_schema):
     df = impute_df(dummy_df, dummy_schema.imputations)
     df = map_oov_categories(df, dummy_schema)
     # Check that the oov categories are no longer present
-    assert sorted(df["p_c_f_2"].unique()) == ["<OTHER>", "food", "jacket"]
+    assert sorted(df["p_c_f_2"].unique()) == ["food", "jacket", "~OTHER~"]
     # Check other columns are unaltered
     assert sorted(df["u_c_f_1"].unique()) == ["infrequent", "loyal"]
 
@@ -72,8 +72,8 @@ def test_one_hot_encode_categorical_features(dummy_df, dummy_schema):
 
     assert result.iloc[0]["p_c_f_2_jacket"] == 1
     assert result.iloc[3]["p_c_f_2_jacket"] == 0
-    assert result.iloc[0]["p_c_f_2_<OTHER>"] == 0
-    assert result.iloc[3]["p_c_f_2_<OTHER>"] == 0
+    assert result.iloc[0]["p_c_f_2_~OTHER~"] == 0
+    assert result.iloc[3]["p_c_f_2_~OTHER~"] == 0
     assert result.iloc[0]["p_c_f_2_food"] == 0
     assert result.iloc[3]["p_c_f_2_food"] == 1
 
@@ -98,9 +98,9 @@ def test_split_dataset(dummy_trainable_df, dummy_schema):
 
     # Check X has the right columns
     assert sorted(X.columns) == [
-        "p_c_f_2_<OTHER>",
         "p_c_f_2_food",
         "p_c_f_2_jacket",
+        "p_c_f_2_~OTHER~",
         "p_n_f_1",
         "u_c_f_1_infrequent",
         "u_c_f_1_loyal",

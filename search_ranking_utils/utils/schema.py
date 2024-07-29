@@ -38,7 +38,7 @@ class Feature:
 
 class CategoricalFeature(Feature):
     VALID_IMPUTE_TYPES = ["mode", "val"]
-    DEFAULT_VAL = "<OTHER>"
+    DEFAULT_VAL = "~OTHER~"
 
     def __init__(
         self,
@@ -89,7 +89,7 @@ class Schema:
         """
         imputations = {}
         for f in self.all_features:
-            if f.impute_strategy.val:
+            if f.impute_strategy.val is not None:
                 imputations[f.name] = f.impute_strategy.val
             else:
                 impute_val = df[f.name].aggregate(
@@ -123,7 +123,8 @@ class Schema:
             # Don't want to include nan as a category
             categories = df[f.name].dropna().value_counts()
             # Keep the most common categories only
-            if f.max_categories:
+            # Only do this if num categories exceeds max
+            if f.max_categories and len(categories) > f.max_categories:
                 categories = list(categories.head(f.max_categories).index)
                 categories.append(CategoricalFeature.DEFAULT_VAL)
             else:
