@@ -35,8 +35,7 @@ def calculate_text_cosine_similarity(
     # Eg. [0][0] is first search query with first product
     # [4][4] is fifth search query with fifth product
     # We would not ever want i != j
-    similarities = get_cosine_similarity(text_embeddings_1, text_embeddings_2)
-    return similarities
+    return get_cosine_similarity(text_embeddings_1, text_embeddings_2)
 
 
 def get_timestamp_part(
