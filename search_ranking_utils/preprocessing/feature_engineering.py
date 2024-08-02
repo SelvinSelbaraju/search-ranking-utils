@@ -7,6 +7,17 @@ EMBEDDING_MODEL = "msmarco-MiniLM-L-6-v3"
 model = SentenceTransformer(EMBEDDING_MODEL)
 
 
+def get_cosine_similarity(emb_1: np.ndarray, emb2: np.ndarray):
+    """
+    Calculate the cosine similarity, row-wise between two matrices
+    Equal to the dot product divided by the product of vector magnitudes
+    Code assumes emb_1 and emb_2 are 2D (N x E)
+    """
+    return np.sum(emb_1 * emb2, axis=1) / (
+        np.linalg.norm(emb_1, axis=1) * np.linalg.norm(emb2, axis=1)
+    )
+
+
 def calculate_text_cosine_similarity(
     df: pd.DataFrame, text_col_1: str, text_col_2: str
 ) -> np.ndarray:
@@ -24,7 +35,8 @@ def calculate_text_cosine_similarity(
     # Eg. [0][0] is first search query with first product
     # [4][4] is fifth search query with fifth product
     # We would not ever want i != j
-    return np.diag(model.similarity(text_embeddings_1, text_embeddings_2))
+    similarities = get_cosine_similarity(text_embeddings_1, text_embeddings_2)
+    return similarities
 
 
 def get_timestamp_part(
